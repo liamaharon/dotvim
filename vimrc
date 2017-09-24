@@ -39,6 +39,10 @@ Plug 'ervandew/supertab'
 
 call plug#end()
 
+" Enable Eclim autocomplete
+filetype plugin on
+set omnifunc=syntaxcomplete#Complete
+
 " Avoid buggy behaivior
 set nocompatible
 
@@ -63,6 +67,9 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 " Map opening NERDTree to Ctrl+n
 map <C-n> :NERDTreeToggle<CR>
 
+" Map opening fzf to Ctrl+P
+map <C-P> :Files<CR>
+
 set nowrap        " don't wrap lines
 set hlsearch      " highlight search terms
 set incsearch     " show search matches as you type
@@ -70,5 +77,4 @@ set colorcolumn=80
 
 " <ESC> to clear search highlighting
 nnoremap <esc> :noh<return><esc>
-
 
