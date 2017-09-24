@@ -31,6 +31,9 @@ Plug 'tpope/vim-commentary'
 " Carbonized colour scheme
 Plug 'nightsense/carbonized'
 
+" Gitgutter
+Plug 'airblade/vim-gitgutter'
+
 call plug#end()
 
 " Enable carbonized theme
