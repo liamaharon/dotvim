@@ -41,7 +41,7 @@ colorscheme carbonized-dark
 
 " Enable linenumbers and syntax highlighting
 syntax on
-set number
+set number relativenumber
 
 " Enable indent guides on startup
 let g:indent_guides_enable_on_vim_startup = 1
