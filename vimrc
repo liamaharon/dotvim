@@ -34,7 +34,13 @@ Plug 'nightsense/carbonized'
 " Gitgutter
 Plug 'airblade/vim-gitgutter'
 
+" Supertab (auto completion)
+Plug 'ervandew/supertab'
+
 call plug#end()
+
+" Avoid buggy behaivior
+set nocompatible
 
 " Enable carbonized theme
 colorscheme carbonized-dark
@@ -43,8 +49,9 @@ colorscheme carbonized-dark
 syntax on
 set number relativenumber
 
-" Enable indent guides on startup
+" Configure indent guides
 let g:indent_guides_enable_on_vim_startup = 1
+set ts=2 sw=2 et
 
 " Enable NERDTree on startup if no files were specified
 autocmd StdinReadPre * let s:std_in=1
@@ -55,3 +62,13 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 " Map opening NERDTree to Ctrl+n
 map <C-n> :NERDTreeToggle<CR>
+
+set nowrap        " don't wrap lines
+set hlsearch      " highlight search terms
+set incsearch     " show search matches as you type
+set colorcolumn=80
+
+" <ESC> to clear search highlighting
+nnoremap <esc> :noh<return><esc>
+
+
