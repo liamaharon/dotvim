@@ -71,7 +71,7 @@ let mapleader = ","
 let g:mapleader = ","
 
 " Fast saving
-map <leader>w :w<CR>
+map <leader>s :w<CR>
 
 " Fast reloading of vimrc
 map <leader>rv :source ~/.vimrc<CR>
@@ -112,7 +112,16 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 "" Airline
-set ttimeoutlen=10
+if ! has('gui_running')
+    set ttimeoutlen=10
+    augroup FastEscape
+        autocmd!
+        au InsertEnter * set timeoutlen=0
+        au InsertLeave * set timeoutlen=1000
+    augroup END
+endif
+
+set ttimeoutlen=5
 
 " Enable Eclim autocomplete
 filetype plugin on
@@ -206,3 +215,4 @@ if has("win32unix")
   let &t_EI.="\e[1 q"
   let &t_te.="\e[0 q"
 endif
+
