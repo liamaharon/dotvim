@@ -12,9 +12,6 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 " Fugitive
 Plug 'tpope/vim-fugitive'
 
-" Indentation
-Plug 'nathanaelkane/vim-indent-guides'
-
 " Fuzzyfinder
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } 
 Plug 'junegunn/fzf.vim'
@@ -28,35 +25,85 @@ Plug 'tpope/vim-surround'
 " Easy commenting
 Plug 'tpope/vim-commentary'
 
-" Carbonized colour scheme
-Plug 'nightsense/carbonized'
-
 " Gitgutter
 Plug 'airblade/vim-gitgutter'
 
 " Supertab (auto completion)
 Plug 'ervandew/supertab'
 
+" Vimux (easily intergrate with tmux)
+Plug 'benmills/vimux'
+
+" Airline status bar
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+" Theme
+Plug 'dracula/vim', { 'as': 'dracula' }
+
 call plug#end()
 
-" Enable Eclim autocomplete
-filetype plugin on
-set omnifunc=syntaxcomplete#Complete
+"""
+""" KEY MAPPINGS
+"""
+" 1. Make pwd always active buffer 
+" 2. Make sure pwd setup
+" 3. Map opening NERDTree to Ctrl+n
+set autochdir
+let NERDTreeChDirMode=2
+map <C-n> :NERDTree .<CR>
 
-" Avoid buggy behaivior
-set nocompatible
+" <leader>f to fzf
+map <leader>f :Files<CR>
 
-" Enable carbonized theme
-colorscheme carbonized-dark
+" Prompt for a command to run
+map <leader>vp :VimuxPromptCommand<CR>
 
-" Enable linenumbers and syntax highlighting
-syntax on
-set number relativenumber
+" Move to line
+map <leader>L <Plug>(easymotion-bd-jk)
+nmap <leader>L <Plug>(easymotion-overwin-line)
 
-" Configure indent guides
-let g:indent_guides_enable_on_vim_startup = 1
-set ts=2 sw=2 et
+" Move to word
+map  <leader>w <Plug>(easymotion-bd-w)
+nmap <leader>w <Plug>(easymotion-overwin-w)
 
+let mapleader = ","
+let g:mapleader = ","
+
+" Fast saving
+map <C-s> :w<CR>
+
+" Fast reloading of vimrc
+map <leader>rv :source ~/.vimrc<CR>
+
+" Disable highlight when <leader><CR> is pressed
+map <silent> <leader><CR> :noh<CR>
+
+" Smart way to move between windows
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+" Useful mappings for managing tabs
+map <leader>tn :tabnew<CR>
+map <leader>to :tabonly<CR>
+map <leader>tc :tabclose<CR>
+map <leader>tm :tabmove 
+map <leader>t<leader> :tabnext
+
+" Let 'tl' toggle between this and the last accessed tab
+let g:lasttab = 1
+nmap <leader>tl :exe "tabn ".g:lasttab<CR>
+au TabLeave * let g:lasttab = tabpagenr()
+
+" Switch CWD to the directory of the open buffer
+map <leader>cd :cd %:p:h<CR>:pwd<CR>
+
+"""
+""" CONFIGURE PLUGINS
+"""
+"" NERDTree
 " Enable NERDTree on startup if no files were specified
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
@@ -64,17 +111,89 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 " Close NERDTree if it's the only window left open
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-" Map opening NERDTree to Ctrl+n
-map <C-n> :NERDTreeToggle<CR>
+"" Airline
+set ttimeoutlen=10
 
-" Map opening fzf to Ctrl+P
-map <C-P> :Files<CR>
+" Enable Eclim autocomplete
+filetype plugin on
+set omnifunc=syntaxcomplete#Complete
 
-set nowrap        " don't wrap lines
-set hlsearch      " highlight search terms
-set incsearch     " show search matches as you type
+"""
+""" SET UI
+"""
+color dracula
 set colorcolumn=80
 
-" <ESC> to clear search highlighting
-nnoremap <esc> :noh<return><esc>
+" Format the status line
+set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+
+"""
+""" GENERAL
+"""
+set nocompatible
+
+" Enable linenumbers and syntax highlighting
+syntax on
+set number relativenumber
+
+" Use spaces instead of tabs
+set expandtab
+
+" Be smart when using tabs
+set smarttab
+
+" 1 tab == 2 spaces
+set shiftwidth=2
+set tabstop=2
+
+" Linebreak on 500 characters
+set lbr
+set tw=500
+
+set ai "Auto indent
+set si "Smart indent
+set wrap "Wrap lines
+
+" Configure backspace so it acts as it should act
+set backspace=eol,start,indent
+set whichwrap+=<,>,h,l
+
+" Ignore case when searching
+set ignorecase
+
+" When searching try to be smart about cases 
+set smartcase
+
+" Highlight search results
+set hlsearch
+
+" Makes search act like search in modern browsers
+set incsearch 
+
+" Don't redraw while executing macros (good performance config)
+set lazyredraw 
+
+" For regular expressions turn magic on
+set magic
+
+" Show matching brackets when text indicator is over them
+set showmatch 
+
+" Turn backup off, since most stuff is in SVN, git et.c anyway...
+set nobackup
+set nowb
+set noswapfile
+
+" Delete trailing white space on save, useful for some filetypes
+fun! CleanExtraSpaces()
+  let save_cursor = getpos(".")
+  let old_query = getreg('/')
+  silent! %s/\s\+$//e
+  call setpos('.', save_cursor)
+  call setreg('/', old_query)
+endfun
+
+if has("autocmd")
+        autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
+ endif
 
