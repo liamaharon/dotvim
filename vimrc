@@ -13,11 +13,11 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'tpope/vim-fugitive'
 
 " Fuzzyfinder
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } 
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
 " EasyMotion
-Plug 'easymotion/vim-easymotion' 
+Plug 'easymotion/vim-easymotion'
 
 " Surround
 Plug 'tpope/vim-surround'
@@ -46,7 +46,7 @@ call plug#end()
 """
 """ KEY MAPPINGS
 """
-" 1. Make pwd always active buffer 
+" 1. Make pwd always active buffer
 " 2. Make sure pwd setup
 " 3. Map opening NERDTree to Ctrl+n
 set autochdir
@@ -89,7 +89,7 @@ map <C-l> <C-W>l
 map <leader>tn :tabnew<CR>
 map <leader>to :tabonly<CR>
 map <leader>tc :tabclose<CR>
-map <leader>tm :tabmove 
+map <leader>tm :tabmove
 map <leader>t<leader> :tabnext
 
 " Let 'tl' toggle between this and the last accessed tab
@@ -161,39 +161,35 @@ set whichwrap+=<,>,h,l
 " Ignore case when searching
 set ignorecase
 
-" When searching try to be smart about cases 
+" When searching try to be smart about cases
 set smartcase
 
 " Highlight search results
 set hlsearch
 
 " Makes search act like search in modern browsers
-set incsearch 
+set incsearch
 
 " Don't redraw while executing macros (good performance config)
-set lazyredraw 
+set lazyredraw
 
 " For regular expressions turn magic on
 set magic
 
 " Show matching brackets when text indicator is over them
-set showmatch 
+set showmatch
 
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
 set nobackup
 set nowb
 set noswapfile
 
-" Delete trailing white space on save, useful for some filetypes
-fun! CleanExtraSpaces()
-  let save_cursor = getpos(".")
-  let old_query = getreg('/')
-  silent! %s/\s\+$//e
-  call setpos('.', save_cursor)
-  call setreg('/', old_query)
+fun! <SID>StripTrailingWhitespaces()
+  let l = line(".")
+  let c = col(".")
+  %s/\s\+$//e
+  call cursor(l, c)
 endfun
 
-if has("autocmd")
-        autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
- endif
+autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 
