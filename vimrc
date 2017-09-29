@@ -71,7 +71,7 @@ let mapleader = ","
 let g:mapleader = ","
 
 " Fast saving
-map <C-s> :w<CR>
+map <leader>w :w<CR>
 
 " Fast reloading of vimrc
 map <leader>rv :source ~/.vimrc<CR>
@@ -193,3 +193,16 @@ endfun
 
 autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 
+" use 256 colors in terminal
+if !has("gui_running")
+  set t_Co=256
+  set term=screen-256color
+endif
+
+" fix cursor display in cygwin
+if has("win32unix")
+  let &t_ti.="\e[1 q"
+  let &t_SI.="\e[5 q"
+  let &t_EI.="\e[1 q"
+  let &t_te.="\e[0 q"
+endif
