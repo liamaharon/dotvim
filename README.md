@@ -4,6 +4,7 @@
 4. create symbolic link to the vimrc
 5. install plugins
 ```
+apt-get install vim
 mkdir ~/.vim
 git clone https://github.com/liamaharon/dotvim.git ~/.vim
 ln ~/.vim/vimrc ~/.vimrc
