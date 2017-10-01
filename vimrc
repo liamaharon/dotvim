@@ -38,8 +38,14 @@ Plug 'benmills/vimux'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
+" Auto completion
+Plug 'artur-shaik/vim-javacomplete2'
+
 " Theme
 Plug 'dracula/vim', { 'as': 'dracula' }
+
+" Theme
+Plug 'Yggdroot/indentLine'
 
 call plug#end()
 
@@ -54,7 +60,7 @@ let NERDTreeChDirMode=2
 map <C-n> :NERDTree .<CR>
 
 " <leader>f to fzf
-map <leader>f :Files<CR>
+noremap <leader>f :Files<CR>
 
 " Prompt for a command to run
 map <leader>vp :VimuxPromptCommand<CR>
@@ -85,20 +91,27 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
-" Useful mappings for managing tabs
-map <leader>tn :tabnew<CR>
-map <leader>to :tabonly<CR>
-map <leader>tc :tabclose<CR>
-map <leader>tm :tabmove
-map <leader>t<leader> :tabnext
-
+" Tab mappings
+nmap tn :tabnew<Space>
+nmap tk :tabnext<CR>
+nmap tj :tabprev<CR>
+nmap th :tabfirst<CR>
+nmap tl :tablast<CR>
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
 nmap <leader>tl :exe "tabn ".g:lasttab<CR>
 au TabLeave * let g:lasttab = tabpagenr()
 
 " Switch CWD to the directory of the open buffer
-map <leader>cd :cd %:p:h<CR>:pwd<CR>
+nmap <leader>cd :cd %:p:h<CR>:pwd<CR>
+
+" Open vimrc with <leader>av
+nmap <leader>av :tabnew ~/.vimrc<CR>
+
+" Fugitive mappings
+nmap gs :Gstatus<CR>
+nmap gc :Gcommit<CR>
+nmap gp :Gpush<CR>
 
 """
 """ CONFIGURE PLUGINS
@@ -113,19 +126,21 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 "" Airline
 if ! has('gui_running')
-    set ttimeoutlen=10
-    augroup FastEscape
-        autocmd!
-        au InsertEnter * set timeoutlen=0
-        au InsertLeave * set timeoutlen=1000
-    augroup END
+  set ttimeoutlen=10
+  augroup FastEscape
+    autocmd!
+    au InsertEnter * set timeoutlen=0
+    au InsertLeave * set timeoutlen=1000
+  augroup END
 endif
 
 set ttimeoutlen=5
 
-" Enable Eclim autocomplete
-filetype plugin on
-set omnifunc=syntaxcomplete#Complete
+"" Autocomplete
+autocmd FileType java setlocal omnifunc=javacomplete#Complete
+
+"" Indentline
+let g:indentLine_char = '▏'
 
 """
 """ SET UI
